@@ -335,6 +335,7 @@ BW_PORT_HTTP=8081
 - [Bitwarden Community](https://community.bitwarden.com/)
 - [Docker Compose Documentation](https://docs.docker.com/compose/)
 - [Bitwarden GitHub](https://github.com/bitwarden/self-host)
+- [Bitwarden Lite Container Versions](https://github.com/bitwarden/self-host/pkgs/container/lite/versions?filters%5Bversion_type%5D=tagged&page=1)
 
 ## License
 
