@@ -192,6 +192,8 @@ docker compose down
 
 ### Backup
 
+Refer to [docs/backups/README.md](docs/backups/README.md#L1-L85) for the consolidated backup and restore workflow (volumes, database dumps, scripts, verification, and security notes).
+
 #### Automatic Backup Script
 Create a backup script at `/opt/bitwarden-lite/backup.sh`:
 
