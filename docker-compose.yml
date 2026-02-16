@@ -5,7 +5,7 @@
 # See README.md for installation instructions
 
 # Project name derived from INSTANCE_NAME to prevent container collisions
-name: ${INSTANCE_NAME}
+name: ${INSTANCE_NAME}-prod
 
 services:
   # ============================================
@@ -13,7 +13,7 @@ services:
   # ============================================
   bitwarden:
     image: ghcr.io/bitwarden/lite:${BW_VERSION:-latest}
-    container_name: ${INSTANCE_NAME}-bitwarden
+    container_name: ${INSTANCE_NAME}-bitwarden-prod
     restart: unless-stopped
     
     # Environment variables from .env file
@@ -23,7 +23,7 @@ services:
     # Port mapping for nginx reverse proxy
     # Only expose HTTP port to localhost (127.0.0.1)
     ports:
-      - "127.0.0.1:${BW_PORT_HTTP:-8080}:8080"
+      - "${BW_PORT_HTTP:-8491}:${BW_PORT_HTTP:-80}"
     
     # Persistent data volume
     volumes:
@@ -35,11 +35,11 @@ services:
     
     # Health check
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/alive"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
+     test: ["CMD", "curl", "-f", "http://localhost:${BW_PORT_HTTP:-8080}/alive"]
+     interval: 30s
+     timeout: 10s
+     retries: 3
+     start_period: 60s
     
     # Network configuration
     networks:
@@ -62,6 +62,7 @@ services:
       POSTGRES_DB: ${BW_DB_DATABASE:-bitwarden_vault}
       POSTGRES_USER: ${BW_DB_USERNAME:-bitwarden}
       POSTGRES_PASSWORD: ${BW_DB_PASSWORD}
+      POSTGRES_ROOT_PASSWORD: ${POSTGRES_ROOT_PASSWORD}
       POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
     
     volumes:
@@ -120,11 +121,11 @@ services:
 # ============================================
 networks:
   bitwarden-network:
-    name: ${INSTANCE_NAME}-network
+    name: ${INSTANCE_NAME}-bitwarden-network
     driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/24
+#    ipam:
+#      config:
+#        - subnet: 172.20.0.0/24
 
 # ============================================
 # VOLUMES
@@ -137,7 +138,7 @@ volumes:
   
   # PostgreSQL data volume
   postgres-data:
-    name: ${INSTANCE_NAME}-postgres-data
+    name: ${INSTANCE_NAME}-bitwarden-postgres-data
     driver: local
   
   # MySQL data volume (uncomment if using MySQL)
